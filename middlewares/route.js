@@ -14,6 +14,12 @@ const validateBody = (schema, options = {}) => {
     next();
   };
 };
+
+/**
+ * validate req.params against a joi schema. Mutates req.params with the result of the
+ * validation to pick up default values
+ */
+
 const validateParams = (schema, options = {}) => {
   return (req, res, next) => {
     const { error, value } = schema.validate(req.params, options);

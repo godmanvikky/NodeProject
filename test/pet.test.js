@@ -6,19 +6,22 @@ const app = require("../app");
 const expect = chai.expect;
 
 chai.use(chaiAsPromised);
+
 /** Pet Unit Tests */
 describe("Test Case - Pets", function () {
-  it("Fetching no record when db is empty", async function () {
+  it("should not fetch record when db is empty", async function () {
     const res = await request(app).get("/pets");
     expect(res.body.length).to.equal(0);
     expect(res.status).to.equal(200);
   });
-  it("Not Creating a Pet object with any empty field", async function () {
+
+  it("should not create a pet object since pet it no input field parms", async function () {
     const res = await request(app).post("/pets").send({});
     expect(res.status).to.equal(400);
     expect(res.body.message).to.equal('"name" is required');
   });
-  it("Not creating a pet Object with age as string", async function () {
+
+  it("should not create a pet object since pet it has age as string", async function () {
     const res = await request(app).post("/pets").send({
       name: "Coco",
       age: '"15"',
@@ -27,7 +30,8 @@ describe("Test Case - Pets", function () {
     expect(res.status).to.equal(400);
     expect(res.body.message).to.equal('"age" must be a number');
   });
-  it("Not creating a pet Object with name as number", async function () {
+
+  it("should not create a pet object since it has name as number", async function () {
     const res = await request(app).post("/pets").send({
       name: 23,
       age: 15,
@@ -36,7 +40,8 @@ describe("Test Case - Pets", function () {
     expect(res.status).to.equal(400);
     expect(res.body.message).to.equal('"name" must be a string');
   });
-  it("Not Creating a Pet object with age field missing", async function () {
+
+  it("should not create pet object since it has no age field", async function () {
     const res = await request(app).post("/pets").send({
       name: "Coco",
       color: "Black",
@@ -44,7 +49,8 @@ describe("Test Case - Pets", function () {
     expect(res.status).to.equal(400);
     expect(res.body.message).to.equal('"age" is required');
   });
-  it("Not Creating a Pet object with name field missing", async function () {
+
+  it("should not create pet object since it has no name field ", async function () {
     const res = await request(app).post("/pets").send({
       age: 17,
       color: "Blue",
@@ -52,7 +58,8 @@ describe("Test Case - Pets", function () {
     expect(res.status).to.equal(400);
     expect(res.body.message).to.equal('"name" is required');
   });
-  it("Not Creating a Pet object with name field empty", async function () {
+
+  it("should not create pet object since it has name field empty", async function () {
     const res = await request(app).post("/pets").send({
       name: "",
       age: 15,
@@ -61,7 +68,8 @@ describe("Test Case - Pets", function () {
     expect(res.status).to.equal(400);
     expect(res.body.message).to.equal('"name" is not allowed to be empty');
   });
-  it("Creating the Pet Object as the data entered are correct", async function () {
+
+  it("should create the Pet Object as the data entered are correct", async function () {
     const user = {
       name: "Husky",
       age: 11,
@@ -73,30 +81,46 @@ describe("Test Case - Pets", function () {
     expect(res.body.age).to.equal(user.age);
     expect(res.body.color).to.equal(user.color);
   });
+
   /**Fetching All Pets records */
-  it("Fetching All Pet records", async function () {
+  it("should fetch all pet records", async function () {
+    const user = {
+      name: "Husky",
+      age: 11,
+      color: "White",
+    };
+    const res1 = await request(app).post("/pets").send(user);
     const res = await request(app).get("/pets");
     expect(res.status).to.equal(200);
     expect(res.body.length).to.greaterThan(0);
   });
-  it("As the name field is empty not fetching the pet record", async function () {
+
+  it("should not fetch pet object as the name field is empty", async function () {
     const name = " ";
     const res = await request(app).get(`/pets/get/${name}`);
     expect(res.status).to.equal(404);
   });
-  it("Fetching pet by name", async function () {
+
+  it("should fetch pet by name", async function () {
     const name = "Husky";
     const res = await request(app).get(`/pets/get/${name}`);
     expect(res.status).to.equal(200);
   });
-  it("Not able to delete the pet as the requested name is empty", async function () {
+
+  it("should not delete the pet object as the requested name is empty", async function () {
     const name = " ";
     const res = await request(app).delete(`/pets/${name}`);
     expect(res.status).to.equal(404);
   });
-  it("Removing the pet from the Pet Object", async function () {
-    const id = 1;
-    const res = await request(app).delete(`/pets/${id}`);
+
+  it("should remove the pet from the Pet Object", async function () {
+    const user = {
+      name: "Dusky",
+      age: 9,
+      color: "Black",
+    };
+    const res1 = await request(app).post("/pets").send(user);
+    const res = await request(app).delete(`/pets/${res1.body._id}`);
     expect(res.status).to.equal(200);
   });
 });

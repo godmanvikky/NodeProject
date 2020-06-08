@@ -77,12 +77,12 @@ router.get(
   }
 );
 
-/** Delete Api call to delete all the Pet by name */
+/** Delete Api call to delete all the Pet by id */
 router.delete(
-  "/:name",
+  "/:id",
   validateParams(
     Joi.object().keys({
-      name: Joi.string().required(),
+      id: Joi.string().required(),
     }),
     {
       stripUnknown: true,
@@ -90,7 +90,7 @@ router.delete(
   ),
   async (req, res, next) => {
     try {
-      await PetModel.deleteMany({ name: req.params.name }, (err) => {
+      await PetModel.deleteMany({ name: req.params._id }, (err) => {
         if (err) {
           res.send(err);
         } else {
