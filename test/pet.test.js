@@ -111,8 +111,7 @@ describe("Test Case - Pets", function () {
       color: "White",
     };
     const petres = await request(app).post("/pets").send(pet);
-    const name = "Bro";
-    const res = await request(app).get(`/pets/get/${name}`);
+    const res = await request(app).get(`/pets/get/${pet.name}`);
     expect(res.status).to.equal(200);
   });
 
