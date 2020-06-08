@@ -90,7 +90,7 @@ router.delete(
   ),
   async (req, res, next) => {
     try {
-      await PetModel.deleteMany({ name: req.params._id }, (err) => {
+      await PetModel.deleteMany({ _id: req.params.id }, (err) => {
         if (err) {
           res.send(err);
         } else {
